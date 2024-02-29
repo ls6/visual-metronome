@@ -1,5 +1,5 @@
 // v3_LS
-const def_timeline = {
+const timeline = {
   "bpm": 88,
   "length": 178,
   "meter": 4, // as in 4/4
@@ -47,7 +47,7 @@ const def_timeline = {
 const flash_duration = 150;
 let timer;
 let counter;
-let timeline;
+let nextChange;
 let interval;
 
 
@@ -66,18 +66,25 @@ function tick() {
   updateDisplay(bar, beat);
 };
 
+function findNextChangeIndex(bar) {
+  let nextChange = timeline.schedule.findIndex((change) => change[0] > bar);
+  return nextChange;
+};
+
 function updateDisplay(bar, beat) {
+  let index;
   updateCounter(bar, beat);
-  if (timeline.schedule.length > 0 && bar == timeline.schedule[0][0]) {
-    updatePlayingNow();
-    timeline.schedule.shift()
-    if (timeline.schedule.length <= 0) {
-      clearInterval(timer);
-    };
-  };
   if (beat == 1) {
     flash1();
-    updatePlayingNext(bar, beat);
+    index = findNextChangeIndex(bar);
+    //console.log(counter + ' = ' + bar + ':' + beat + '->' + index);
+    if (index == -1) {
+      clearInterval(timer);
+    }
+    else {
+      updatePlayingNow(index - 1);
+      updatePlayingNext(bar, index);
+    }
   } else {
     flash2();
   };
@@ -87,13 +94,19 @@ function updateCounter(bar, beat) {
   document.getElementById("count").innerHTML = bar + "." + beat;
 };
 
-function updatePlayingNow(bar, beat) {
-  document.getElementById("change").innerHTML = timeline.schedule[0][1];
+function updatePlayingNow(index) {
+  let text;
+  if (arguments.length === 0) {
+    text = '';
+  } else {
+    text = timeline.schedule[index][1];
+  };
+  document.getElementById("change").innerHTML = text;
 };
 
-function updatePlayingNext(bar, beat) {
-  document.getElementById("nextWhat").innerHTML = timeline.schedule[0][1];
-  document.getElementById("nextWhen").innerHTML = " za " + (timeline.schedule[0][0] - bar) + " ";
+function updatePlayingNext(bar, index) {
+  document.getElementById("nextWhat").innerHTML = timeline.schedule[index][1];
+  document.getElementById("nextWhen").innerHTML = " za " + (timeline.schedule[index][0] - bar) + " ";
 };
 
 function flash1() {
@@ -144,13 +157,12 @@ function change_button_to_start() {
 };
 
 function reset() {
-  // Yes, it is unbelievable that this is the way to make a deep copy!
-  timeline = JSON.parse(JSON.stringify(def_timeline));
   interval = (60 / timeline.bpm) * 1000;
   counter = -timeline.meter - 2;
   tick();
   updateDisplay(0, -4);
-  updatePlayingNext(0, 1);
+  updatePlayingNow();
+  updatePlayingNext(0, 0);
   change_button_to_start();
 };
 
