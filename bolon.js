@@ -44,7 +44,7 @@ const timeline = {
   ]
 };
 
-const flash_duration = 150;
+const flashDuration = 150;
 let timer;
 let counter;
 let nextChange;
@@ -114,7 +114,7 @@ function flash1() {
   for (var i = 0; i < elements.length; i++) {
     elements[i].style.backgroundColor = 'blue';
   };
-  setTimeout(resetFlash, flash_duration);
+  setTimeout(resetFlash, flashDuration);
 };
 
 function flash2() {
@@ -122,7 +122,7 @@ function flash2() {
   for (var i = 0; i < elements.length; i++) {
     elements[i].style.backgroundColor = 'aqua';
   };
-  setTimeout(resetFlash, flash_duration);
+  setTimeout(resetFlash, flashDuration);
 };
 
 function resetFlash() {
@@ -135,34 +135,34 @@ function resetFlash() {
 
 function start() {
   timer = setInterval(tick, interval);
-  change_button_to_stop();
+  changeButtonToStop();
 };
 
 function stop() {
   clearInterval(timer);
-  change_button_to_start();
+  changeButtonToStart();
 };
 
-function change_button_to_stop() {
+function changeButtonToStop() {
   button = document.getElementById("play_control");
   button.onclick = function () { stop(); };
   button.innerHTML = "STOP";
-  hide_reset_button();
+  hideResetButton();
 };
 
-function change_button_to_start() {
+function changeButtonToStart() {
   button = document.getElementById("play_control");
   button.onclick = function () { start(); };
   button.innerHTML = "START";
-  show_reset_button();
+  showResetButton();
 };
 
-function show_reset_button() {
+function showResetButton() {
   let reset_button = document.getElementById("reset");
   reset_button.style.display = "inline";
 };
 
-function hide_reset_button() {
+function hideResetButton() {
   let reset_button = document.getElementById("reset");
   reset_button.style.display = "none";
 };
@@ -174,8 +174,8 @@ function reset() {
   updateDisplay(0, -4);
   updatePlayingNow();
   updatePlayingNext(0, 0);
-  change_button_to_start();
-  hide_reset_button();
+  changeButtonToStart();
+  hideResetButton();
 };
 
 document.addEventListener("DOMContentLoaded", function (event) {
