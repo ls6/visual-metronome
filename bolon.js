@@ -140,20 +140,31 @@ function start() {
 
 function stop() {
   clearInterval(timer);
-  reset();
   change_button_to_start();
 };
 
 function change_button_to_stop() {
   button = document.getElementById("play_control");
   button.onclick = function () { stop(); };
-  button.innerHTML = "STOP & RESET";
+  button.innerHTML = "STOP";
+  hide_reset_button();
 };
 
 function change_button_to_start() {
   button = document.getElementById("play_control");
   button.onclick = function () { start(); };
   button.innerHTML = "START";
+  show_reset_button();
+};
+
+function show_reset_button() {
+  let reset_button = document.getElementById("reset");
+  reset_button.style.display = "inline";
+};
+
+function hide_reset_button() {
+  let reset_button = document.getElementById("reset");
+  reset_button.style.display = "none";
 };
 
 function reset() {
@@ -164,6 +175,7 @@ function reset() {
   updatePlayingNow();
   updatePlayingNext(0, 0);
   change_button_to_start();
+  hide_reset_button();
 };
 
 document.addEventListener("DOMContentLoaded", function (event) {

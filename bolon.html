@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <style>
-    
     .container {
       display: flex;
       flex-direction: column;
@@ -17,16 +16,24 @@
       background-color: rgb(176, 176, 176);
     }
 
+    #buttons {
+      margin: auto;
+    }
+
     #play_control {
       min-width: 40vw;
-      margin: auto;
+    }
+
+    #reset {
+      display: none;
+      min-width: 20vw;
+      background-color: rgb(174, 99, 99);
     }
 
     #mainCounter {
       font-size: 150%;
       margin: auto;
     }
-
   </style>
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -39,7 +46,10 @@
 
   <div class="container">
 
-    <button id="play_control" onclick="start()">Start</button>
+    <div id="buttons">
+      <button id="play_control" onclick="start()">Start</button>
+      <button id="reset" onclick="reset()">Reset</button>
+    </div>
 
     <div id="mainCounter" class="flashable">
       <div> <span id="count"></span></div>
