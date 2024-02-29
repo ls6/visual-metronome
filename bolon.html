@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 5vh;
+      font-size: 9vmin;
+    }
+
+    .label {
+      background-color: rgb(176, 176, 176);
+    }
+
+    #play_control {
+      min-width: 40vw;
+      margin: auto;
+    }
+
+    #mainCounter {
+      font-size: 150%;
+      margin: auto;
+    }
+
+  </style>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+</head>
+
+<body>
+
+  <script src="bolon.js"></script>
+
+  <div class="container">
+
+    <button id="play_control" onclick="start()">Start</button>
+
+    <div id="mainCounter" class="flashable">
+      <div> <span id="count"></span></div>
+    </div>
+
+    <div id="now" class="">
+      <span class="label">teraz:<br></span>
+      <span id="change"></span>
+    </div>
+
+    <div id="nextChange" class="">
+      <span class="label">następne:<br></span>
+      <span id="nextWhat"></span><span id="nextWhen"></span>
+    </div>
+  </div>
+
+</body>
+
+</html>
