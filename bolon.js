@@ -148,6 +148,7 @@ function changeButtonToStop() {
   button.onclick = function () { stop(); };
   button.innerHTML = "STOP";
   hideResetButton();
+  hideChangesDropdown();
 };
 
 function changeButtonToStart() {
@@ -155,6 +156,7 @@ function changeButtonToStart() {
   button.onclick = function () { start(); };
   button.innerHTML = "START";
   showResetButton();
+  showChangesDropdown();
 };
 
 function showResetButton() {
@@ -167,9 +169,35 @@ function hideResetButton() {
   reset_button.style.display = "none";
 };
 
+function populateChangesSelector() {
+  timeline.schedule.forEach(function (item) {
+    const option = document.createElement("option");
+    option.textContent = item[0] + ' — ' + item[1];
+    //option.textContent = JSON.stringify(item);
+    document.getElementById("changes").appendChild(option);
+  });
+};
+
+function changeSelected(val) {
+  let selectedBar = val.split(' — ')[0];
+  counter = ((selectedBar -1 )* 4) - 1;
+  tick()
+};
+
+function showChangesDropdown() {
+  let reset_button = document.getElementById("changes");
+  reset_button.style.display = "inline";
+};
+
+function hideChangesDropdown() {
+  let reset_button = document.getElementById("changes");
+  reset_button.style.display = "none";
+};
+
 function reset() {
   interval = (60 / timeline.bpm) * 1000;
   counter = -timeline.meter - 2;
+  populateChangesSelector();
   tick();
   updateDisplay(0, -4);
   updatePlayingNow();
