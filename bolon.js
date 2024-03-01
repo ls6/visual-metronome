@@ -1,4 +1,3 @@
-// v3_LS
 const timeline = {
   "bpm": 88,
   "length": 178,
@@ -173,7 +172,6 @@ function populateChangesSelector() {
   timeline.schedule.forEach(function (item) {
     const option = document.createElement("option");
     option.textContent = item[0] + ' — ' + item[1];
-    //option.textContent = JSON.stringify(item);
     document.getElementById("changes").appendChild(option);
   });
 };
