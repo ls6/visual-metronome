@@ -2,45 +2,6 @@ const timeline = {
   "bpm": 88,
   "length": 178,
   "meter": 4, // as in 4/4
-  "schedule": [
-    [0, "wszyscy dzwonek na boku bębna"],
-    [9, "połowa lewej ręki Agaty"],
-    [13, "tumby bum bum bum"],
-    [17, "cała lewa ręka Agaty"],
-    [21, "congi bum bum bum"],
-    [25, "quinta bum bum bum"],
-    [29, "manewr Ksawerego - dzyń dzyń dzyń"],
-    [33, "manewr Ksawerego - całość"],
-    [37, "cała ręka Agaty i WSZYSCY"],
-    [45, "PRZERWA, Agata bum bum bum"],
-    [46, "WSZYSCY"],
-    [62, "bez dzwonków (Agata bum bum bum)"],
-    [66, "bez tumb"],
-    [68, "bez cong"],
-    [70, "quinta coraz głośniej"],
-    [74, "Przeszkadzajki: Adam grzechotka"],
-    [76, "Ania"],
-    [78, "Tosia"],
-    [80, "Lilka"],
-    [82, "Iza"],
-    [84, "Jarek"],
-    [86, "manewr Ksawerego - dzyń dzyń dzyń"],
-    [90, "manewr Ksawerego - całość"],
-    [94, "delegacja conga"],
-    [98, "delegacja tumba"],
-    [102, "wszyscy, Agata zmienia bas"],
-    [118, "odwijamy przeszkadzajki - bez Jarka"],
-    [120, "bez Izy"],
-    [122, "bez Liki"],
-    [124, "bez Tosi"],
-    [126, "bez Ani"],
-    [128, "Agata bas + dzwonek i WSZYSCY"],
-    [144, "bębny się wyciszają do zera"],
-    [152, "Adam, cała Agata, cały Ksawery"],
-    [160, "Adam, Agata sam bęben, Ksawery sam bęben"],
-    [168, "sam Adam"],
-    [172, "koniec"]
-  ]
 };
 
 const flashDuration = 150;
@@ -48,7 +9,16 @@ let timer;
 let counter;
 let nextChange;
 let interval;
+let remote_schedule;
 
+
+function downloadSchedule() {
+  Papa.parse("bolon.csv", {
+    download: true,
+    dynamicTyping: true,
+    complete: response => { remote_schedule = response.data; reset() }
+  });
+};
 
 function tick() {
   let bar
@@ -66,7 +36,7 @@ function tick() {
 };
 
 function findNextChangeIndex(bar) {
-  let nextChange = timeline.schedule.findIndex((change) => change[0] > bar);
+  let nextChange = remote_schedule.findIndex((change) => change[0] > bar);
   return nextChange;
 };
 
@@ -81,7 +51,9 @@ function updateDisplay(bar, beat) {
       clearInterval(timer);
     }
     else {
-      updatePlayingNow(index - 1);
+      if (index > 0) {
+        updatePlayingNow(index - 1);
+      };
       updatePlayingNext(bar, index);
     }
   } else {
@@ -98,14 +70,14 @@ function updatePlayingNow(index) {
   if (arguments.length === 0) {
     text = '';
   } else {
-    text = timeline.schedule[index][1];
+    text = remote_schedule[index][1];
   };
   document.getElementById("change").innerHTML = text;
 };
 
 function updatePlayingNext(bar, index) {
-  document.getElementById("nextWhat").innerHTML = timeline.schedule[index][1];
-  document.getElementById("nextWhen").innerHTML = " za " + (timeline.schedule[index][0] - bar) + " ";
+  document.getElementById("nextWhat").innerHTML = remote_schedule[index][1];
+  document.getElementById("nextWhen").innerHTML = " za " + (remote_schedule[index][0] - bar) + " ";
 };
 
 function flash1() {
@@ -169,7 +141,7 @@ function hideResetButton() {
 };
 
 function populateChangesSelector() {
-  timeline.schedule.forEach(function (item) {
+  remote_schedule.forEach(function (item) {
     const option = document.createElement("option");
     option.textContent = item[0] + ' — ' + item[1];
     document.getElementById("changes").appendChild(option);
@@ -178,7 +150,7 @@ function populateChangesSelector() {
 
 function changeSelected(val) {
   let selectedBar = val.split(' — ')[0];
-  counter = ((selectedBar -1 )* 4) - 1;
+  counter = ((selectedBar - 1) * 4) - 1;
   tick()
 };
 
@@ -194,16 +166,16 @@ function hideChangesDropdown() {
 
 function reset() {
   interval = (60 / timeline.bpm) * 1000;
-  counter = -timeline.meter - 2;
+  counter = -1;
   populateChangesSelector();
-  tick();
-  updateDisplay(0, -4);
-  updatePlayingNow();
-  updatePlayingNext(0, 0);
+  //tick();
+  updateDisplay(0, 0);
+  updatePlayingNow(0);
+  updatePlayingNext(0, 1);
   changeButtonToStart();
   hideResetButton();
 };
 
 document.addEventListener("DOMContentLoaded", function (event) {
-  reset();
+  downloadSchedule();
 });
